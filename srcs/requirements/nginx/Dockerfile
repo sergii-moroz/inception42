@@ -5,7 +5,7 @@ RUN apk add --no-cache nginx openssl
 RUN rm -rf /var/cache/apk/*
 
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-COPY ./conf/http.d/default.conf /etc/nginx/http.d/default.conf
+COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 
 RUN mkdir -p /etc/nginx/ssl
 RUN openssl req \
