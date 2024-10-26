@@ -12,10 +12,40 @@ services:
     volumes:
       - ./wordpress:/var/www/html
     depends_on:
-      - wordpress
+    #   - wordpress
       - mariadb
+    networks:
+      - public
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.11.6-alpine3.19
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    volumes:
+      - ./requirements/mariadb/db-data:/var/lib/mysql/
+    env_file:
+      - .env
+    secrets:
+      - mysql_root_user
+      - mysql_root_password
+      - wp_admin_user
+      - wp_admin_password
     networks:
       - public
 
 networks:
   public:
+
+secrets:
+  mysql_root_user:
+    file: ../secrets/db_root_user.txt
+  mysql_root_password:
+    file: ../secrets/db_root_password.txt
+
+  # Wordpress admin
+  wp_admin_user:
+    file: ../secrets/wp_admin_user.txt
+  wp_admin_password:
+    file: ../secrets/wp_admin_password.txt
