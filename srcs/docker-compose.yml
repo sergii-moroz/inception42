@@ -24,7 +24,7 @@ services:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
     volumes:
-      - ./requirements/mariadb/db-data:/var/lib/mysql/
+      - ./requirements/mariadb/db-data:/var/lib/mysql
     env_file:
       - .env
     secrets:
