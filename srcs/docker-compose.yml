@@ -12,7 +12,7 @@ services:
     volumes:
       - ./wordpress:/var/www/html
     depends_on:
-    #   - wordpress
+      - wordpress
       - mariadb
     networks:
       - public
@@ -35,6 +35,28 @@ services:
     networks:
       - public
 
+  wordpress:
+    container_name: wordpress
+    image: wordpress:php8.2-alpine3.19
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    volumes:
+      - ./requirements/wordpress/wp-data:/var/www/html
+    env_file:
+      - .env
+    secrets:
+      - wp_admin_user
+      - wp_admin_password
+      - wp_admin_email
+      - wp_user
+      - wp_user_password
+      - wp_user_email
+    depends_on:
+      - mariadb
+    networks:
+      - public
+
 networks:
   public:
 
@@ -49,3 +71,13 @@ secrets:
     file: ../secrets/wp_admin_user.txt
   wp_admin_password:
     file: ../secrets/wp_admin_password.txt
+  wp_admin_email:
+    file: ../secrets/wp_admin_email.txt
+
+  # Wordpress user
+  wp_user:
+    file: ../secrets/wp_user.txt
+  wp_user_password:
+    file: ../secrets/wp_user_password.txt
+  wp_user_email:
+    file: ../secrets/wp_user_email.txt
