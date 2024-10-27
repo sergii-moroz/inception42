@@ -10,10 +10,11 @@ services:
       - 80:80
       # - 443:443
     volumes:
-      - ./wordpress:/var/www/html
+      - ./requirements/wordpress/wp-data:/var/www/html
     depends_on:
       - wordpress
       - mariadb
+    restart: on-failure
     networks:
       - public
 
@@ -32,6 +33,7 @@ services:
       - mysql_root_password
       - wp_admin_user
       - wp_admin_password
+    restart: unless-stopped
     networks:
       - public
 
@@ -54,6 +56,7 @@ services:
       - wp_user_email
     depends_on:
       - mariadb
+    restart: on-failure
     networks:
       - public
 
