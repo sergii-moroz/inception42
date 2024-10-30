@@ -8,7 +8,14 @@ signal_terminate_trap() {
 
 trap "signal_terminate_trap" SIGTERM
 
+if [ ! -d "/run/maria" ]; then
+	mkdir -p /run/maria
+	chown -R mysql:mysql /run/maria
+fi
+
 if [ ! -f "/var/lib/mysql/ibdata1" ]; then
+	chown -R mysql:mysql /var/lib/mysql
+
 	mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 	wait $!
 
