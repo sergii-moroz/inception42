@@ -17,6 +17,6 @@ RUN openssl req \
 	-keyout /etc/nginx/ssl/inception.key \
 	-subj "/C=DE/ST=IDF/L=Heilbronn/O=42/OU=42/CN=smoroz.42.fr/UID=smoroz"
 
-# EXPOSE 443
+EXPOSE 443
 
 CMD [ "nginx", "-g", "daemon off;" ]
