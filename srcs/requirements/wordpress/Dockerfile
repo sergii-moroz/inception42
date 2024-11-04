@@ -7,6 +7,7 @@ RUN apk add --no-cache \
 	php82-phar \
 	php82-mysqli \
 	php82-iconv \
+	mariadb-client \
 	openssl
 
 RUN rm -rf /var/cache/apk/*
