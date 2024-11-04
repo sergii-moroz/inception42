@@ -20,7 +20,11 @@ if [ ! -f "/var/lib/mysql/ibdata1" ]; then
 	wait $!
 
 	mariadbd &
-	sleep 5
+	until mariadb -e "show databases;" > /dev/null 2>&1;do
+		sleep 5
+		echo "waiting connection to the DB ..."
+	done
+	# sleep 5
 	#
 	read -r MYSQL_ROOT_USER		< $MYSQL_ROOT_USER_FILE
 	read -r MYSQL_ROOT_PASSWORD	< $MYSQL_ROOT_PASSWORD_FILE
