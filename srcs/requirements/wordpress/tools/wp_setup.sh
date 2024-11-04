@@ -12,6 +12,10 @@ if [ ! -f "/var/www/html/wp-config.php" ]; then
 	read -r WP_USER_PASSWORD	< $WP_USER_PASSWORD_FILE
 	read -r WP_USER_EMAIL		< $WP_USER_EMAIL_FILE
 
+	until mariadb -h"mariadb" -u$WP_ADMIN_USER -p$WP_ADMIN_PASSWORD -e "show databases;" > /dev/null 2>&1;do
+		sleep 5
+		echo "connecting ..."
+	done
 
 	wp config create \
 		--allow-root \
