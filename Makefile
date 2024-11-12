@@ -1,23 +1,41 @@
+COMPOSE_FILE		=	./srcs/docker-compose.yml
+USER				=	smoroz
+
+all:	up
+
 up:
-	@docker-compose -f srcs/docker-compose.yml up --build -d --remove-orphans
+	@docker compose -f $(COMPOSE_FILE) up --build -d
 
 down:
-	@docker-compose -f ./srcs/docker-compose.yml down -v --remove-orphans
+	@docker compose -f $(COMPOSE_FILE) down
 
-logs:
-	@docker-compose -f ./srcs/docker-compose.yml logs
+%_log:
+	docker compose -f $(COMPOSE_FILE) logs $*
 
-clean: del_data
-	@docker-compose -f ./srcs/docker-compose.yml down -v --remove-orphans
+%_it:
+	docker compose -f $(COMPOSE_FILE) exec $* /bin/ash
+
+clean:
+	@docker compose -f $(COMPOSE_FILE) down
 	@docker system prune -a -f
 	@docker image prune -a -f
 	@docker volume prune -f
 
-del_data:
-	rm -rf ./srcs/requirements/mariadb/db-data
-	rm -rf ./srcs/requirements/wordpress/wp-data
+fclean: clean
+	rm -rf /home/$(USER)/data/mariadb
+	rm -rf /home/$(USER)/data/wordpress
 
-re: down up
-cre: down clean up
+re: fclean all
 
-PHONY: up down re cre logs clean
+ps:
+	@docker compose -f ./srcs/docker-compose.yml ps
+
+# pass:
+# 	if [ ! -d "secrets2" ]; then
+# 		mkdir secrets
+# 		LC_ALL=C tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 10 > ./secrets2/db_root_password.txt
+# 		LC_ALL=C tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 10 > ./secrets2/wp_admin_password.txt
+# 		LC_ALL=C tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 10 > ./secrets2/wp_user_password.txt
+# 	fi
+
+PHONY: all up down clean fclean re
