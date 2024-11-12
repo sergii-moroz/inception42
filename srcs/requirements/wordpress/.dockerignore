@@ -1,4 +1,3 @@
-wp-data/
 */.env*
 .dockerignore
 Dockerfile
