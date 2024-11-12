@@ -11,6 +11,7 @@ trap "signal_terminate_trap" SIGTERM
 if [ ! -d "/run/maria" ]; then
 	mkdir -p /run/maria
 	chown -R mysql:mysql /run/maria
+	chmod -R 775 /run/maria
 fi
 
 if [ ! -f "/var/lib/mysql/ibdata1" ]; then
@@ -24,15 +25,12 @@ if [ ! -f "/var/lib/mysql/ibdata1" ]; then
 		sleep 5
 		echo "waiting connection to the DB ..."
 	done
-	# sleep 5
-	#
+
 	read -r MYSQL_ROOT_USER		< $MYSQL_ROOT_USER_FILE
 	read -r MYSQL_ROOT_PASSWORD	< $MYSQL_ROOT_PASSWORD_FILE
-
 	read -r WP_ADMIN_USER		< $WP_ADMIN_USER_FILE
 	read -r WP_ADMIN_PASSWORD	< $WP_ADMIN_PASSWORD_FILE
 
-	#
 	mariadb -e "GRANT ALL ON *.* TO '$MYSQL_ROOT_USER'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' WITH GRANT OPTION;"
 	mariadb -e "GRANT ALL ON *.* TO '$MYSQL_ROOT_USER'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' WITH GRANT OPTION;"
 
