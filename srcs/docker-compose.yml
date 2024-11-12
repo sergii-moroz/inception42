@@ -7,10 +7,9 @@ services:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     ports:
-      # - 80:80
       - 443:443
     volumes:
-      - ./requirements/wordpress/wp-data:/var/www/html:rw
+      - /home/smoroz/data/wordpress:/var/www/html:rw
     depends_on:
       - wordpress
       - mariadb
@@ -25,7 +24,7 @@ services:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
     volumes:
-      - ./requirements/mariadb/db-data:/var/lib/mysql:rw
+      - /home/smoroz/data/mariadb:/var/lib/mysql:rw
     env_file:
       - .env
     secrets:
@@ -44,7 +43,7 @@ services:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
     volumes:
-      - ./requirements/wordpress/wp-data:/var/www/html:rw
+      - /home/smoroz/data/wordpress:/var/www/html:rw
     env_file:
       - .env
     secrets:
