@@ -10,32 +10,31 @@ down:
 	@docker compose -f $(COMPOSE_FILE) down
 
 %_log:
-	docker compose -f $(COMPOSE_FILE) logs $*
+	@docker compose -f $(COMPOSE_FILE) logs $*
 
 %_it:
-	docker compose -f $(COMPOSE_FILE) exec $* /bin/ash
+	@docker compose -f $(COMPOSE_FILE) exec $* /bin/ash
 
 clean:
 	@docker compose -f $(COMPOSE_FILE) down
 	@docker system prune -a -f
 	@docker image prune -a -f
-	@docker volume prune -f
+	@docker network prune -f
 
 fclean: clean
-	rm -rf /home/$(USER)/data/mariadb
-	rm -rf /home/$(USER)/data/wordpress
+	@docker volume rm mariadb wordpress
+	@rm -rf /home/$(USER)/data/mariadb/*
+	@rm -rf /home/$(USER)/data/wordpress/*
 
 re: fclean all
 
 ps:
 	@docker compose -f ./srcs/docker-compose.yml ps
 
-# pass:
-# 	if [ ! -d "secrets2" ]; then
-# 		mkdir secrets
-# 		LC_ALL=C tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 10 > ./secrets2/db_root_password.txt
-# 		LC_ALL=C tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 10 > ./secrets2/wp_admin_password.txt
-# 		LC_ALL=C tr -dc 'A-Za-z0-9!?%=' < /dev/urandom | head -c 10 > ./secrets2/wp_user_password.txt
-# 	fi
+volume:
+	@docker volume list
+
+network:
+	@docker network list
 
 PHONY: all up down clean fclean re
