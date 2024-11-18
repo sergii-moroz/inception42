@@ -41,6 +41,8 @@ if [ ! -f "/var/www/html/wp-config.php" ]; then
 		--user_pass=$WP_USER_PASSWORD \
 		--role=author \
 		--allow-root
+
+	wp theme activate twentytwentyfour
 fi
 
 php-fpm82 -F
