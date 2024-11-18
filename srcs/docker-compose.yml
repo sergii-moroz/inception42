@@ -2,14 +2,14 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:0.1.0-alpine3.19
+    image: nginx
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     ports:
       - 443:443
     volumes:
-      - /home/smoroz/data/wordpress:/var/www/html:rw
+      - wordpress:/var/www/html:rw
     depends_on:
       - wordpress
       - mariadb
@@ -19,12 +19,12 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: mariadb:10.11.6-alpine3.19
+    image: mariadb
     build:
       context: ./requirements/mariadb
       dockerfile: Dockerfile
     volumes:
-      - /home/smoroz/data/mariadb:/var/lib/mysql:rw
+      - mariadb:/var/lib/mysql:rw
     env_file:
       - .env
     secrets:
@@ -38,12 +38,12 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: wordpress:php8.2-alpine3.19
+    image: wordpress
     build:
       context: ./requirements/wordpress
       dockerfile: Dockerfile
     volumes:
-      - /home/smoroz/data/wordpress:/var/www/html:rw
+      - wordpress:/var/www/html:rw
     env_file:
       - .env
     secrets:
@@ -85,3 +85,20 @@ secrets:
     file: ../secrets/wp_user_password.txt
   wp_user_email:
     file: ../secrets/wp_user_email.txt
+
+volumes:
+  wordpress:
+    name: wordpress
+    driver_opts:
+      o: bind
+      type: none
+      device: "/home/smoroz/data/wordpress"
+    driver: local
+
+  mariadb:
+    name: mariadb
+    driver_opts:
+      o: bind
+      type: none
+      device: "/home/smoroz/data/mariadb"
+    driver: local
