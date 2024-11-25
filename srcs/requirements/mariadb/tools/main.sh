@@ -1,7 +1,7 @@
 #!/bin/ash
 
 signal_terminate_trap() {
-	mariadb-admin shutdown &
+	mariadb-admin shutdown
 	wait $!
 	echo "MariaDB shut down successfully"
 }
@@ -48,7 +48,7 @@ if [ ! -f "/var/lib/mysql/ibdata1" ]; then
 	wait $!
 fi
 
-exec mariadbd --user=mysql --datadir=/var/lib/mysql &
+exec mariadbd --user=mysql --datadir=/var/lib/mysql
 
 wait $!
 exit 0
